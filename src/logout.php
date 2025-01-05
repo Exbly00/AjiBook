@@ -1,11 +1,15 @@
 <?php
 
-require_once('./config/autoload.php');
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+// Réinitialiser toutes les variables de session
+$_SESSION = array();  
 
-// Démarrage de la session
-session_start();
-// Détruire la session actuelle
-session_destroy();
+// Détruire la session
+session_destroy();     
 
-// Redirection vers la page principale après la déconnexion
+// Redirection vers la page d'accueil après la déconnexion
 header('Location: ./');
+exit;
+

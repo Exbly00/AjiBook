@@ -2,6 +2,17 @@
 
 require_once('./config/autoload.php');
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Vérifie si l'utilisateur est déjà connecté
+if (isset($_SESSION['user'])) {
+    header('Location: ./'); // Redirige vers la page d'accueil
+    exit(); // Arrête l'exécution du script pour éviter tout affichage de la page de connexion
+}
+
+
 use ch\comem\DB;
 use ch\comem\controllers\UsersController;
 
@@ -27,12 +38,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Vérification du mot de passe et de l'existence de l'utilisateur
         if ($user && password_verify($password, $user->getPassword())) {
+            
             // Démarrage de la session et stockage de l'utilisateur dans la session
-            session_start();
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
             $_SESSION['user'] = $user;
 
             // Redirection vers la page d'accueil après une connexion réussie
             header('Location: ./');
+            exit();
         } else {
             // Message d'erreur si l'utilisateur n'existe pas ou le mot de passe est incorrect
             $errorMessage = "Erreur de connexion";

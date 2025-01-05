@@ -3,10 +3,18 @@
 // Récupération de l'URL de la requête
 $requestUrl = $_SERVER['REQUEST_URI'];
 
-// Démarrage de la session utilisateur
-session_start();
+// Démarrage de la session utilisateur conditionnel
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+//var_dump($_SESSION);
+
 // Récupération des informations de l'utilisateur connecté depuis la session
-$userSession = $_SESSION['user'];
+if (isset($_SESSION['user'])) {
+    $userSession = $_SESSION['user'];
+} else {
+    $userSession = null;
+}
 
 ?>
 
@@ -30,7 +38,7 @@ $userSession = $_SESSION['user'];
                 <a href="./logout.php">Déconnexion</a>
             </div>
         </div>
-    <? endif ?>
+        <? endif ?>
 </div>
 
 <!-- Barre de menu -->

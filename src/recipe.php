@@ -24,8 +24,15 @@ $recipe = $recipesController->getById($id);
 $user = $usersController->getById($recipe->getUsersId());
 
 
-session_start();
-$userSession = $_SESSION['user'];
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (isset($_SESSION['user'])) {
+    $userSession = $_SESSION['user'];
+} else {
+    $userSession = null;
+}
 
 // Traitement des actions POST pour ajouter ou retirer des favoris
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -111,7 +118,7 @@ foreach ($bookmarks as $bookmark) {
                         <!-- Formulaire de gestion des favoris uniquement si l'utilisateur est connecté -->
                         <div class="actions">
 
-                            <? if ($userSession != null): ?>
+                            <?php if ($userSession != null): ?>
                                 <form method="POST" action="./recipe.php?id=<?= $recipe->getId() ?>">
                                     <input type="hidden" name="action" value="<?= $isBookmarked ? 'remove' : 'add' ?>">
                                     <!-- Bouton pour ajouter ou retirer un favori -->
@@ -122,14 +129,14 @@ foreach ($bookmarks as $bookmark) {
                                     </button>
                                 </form>
 
-                                <? if ($userSession->getId() == $recipe->getUsersId()): ?>
+                                <?php if ($userSession->getId() == $recipe->getUsersId()): ?>
                                     <a class="button" href="./update-recipe.php?id=<?= $recipe->getId() ?>">Modifier</a>
                                     <form method="POST" action="./recipe.php?id=<?= $recipe->getId() ?>">
                                         <input type="hidden" name="action" value="delete" />
                                         <button class="button">Supprimer</button>
                                     </form>
-                                <? endif ?>
-                            <? endif ?>
+                                <?php endif; ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <!-- Affichage des tags de la recette (catégorie et auteur) -->

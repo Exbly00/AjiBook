@@ -8,7 +8,9 @@ use ch\comem\models\Recipe;
 
 $db = new DB();
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Vérification si l'utilisateur est connecté
 $user = $_SESSION['user'];

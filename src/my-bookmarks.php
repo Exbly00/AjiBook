@@ -7,7 +7,9 @@ use ch\comem\controllers\RecipesController;
 
 $db = new DB();
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Récupérer les informations de l'utilisateur stockées dans la session
 $user = $_SESSION['user'];
